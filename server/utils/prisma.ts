@@ -12,7 +12,7 @@ const prismaClientSingleton = () => {
   });
   return new PrismaClient({
     adapter: adapter,
-    log: ['query', 'info', 'error', 'warn']
+    // log: ['query', 'info', 'error', 'warn']
   });
 }
 
