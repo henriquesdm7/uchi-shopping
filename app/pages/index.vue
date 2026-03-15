@@ -1,9 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'guest',
+  layout: 'auth',
 })
 </script>
 
 <template>
-  asdasd
+  <UContainer>
+    Bem-vindo!
+  </UContainer>
 </template>
