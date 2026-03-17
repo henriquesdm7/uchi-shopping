@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type {AuthFormField} from "@nuxt/ui/components/AuthForm.vue";
 import {type PasswordLoginInput, PasswordLoginSchema} from "#shared/utils/auth.schema";
-import type {FormSubmitEvent} from "@nuxt/ui/runtime/types";
+import {type FormSubmitEvent} from "@nuxt/ui/runtime/types";
 
 definePageMeta({
   layout: "guest",
 })
 
 const toast = useToast();
+const isLoading = ref(false);
 
 const fields: AuthFormField[] = [{
   name: 'email',
@@ -30,7 +31,14 @@ const providers = [{
 }]
 
 async function onSubmit(event: FormSubmitEvent<PasswordLoginInput>) {
-  console.log(event.data);
+  isLoading.value = true;
+
+  const response = await $fetch('/api/login', {
+    method: 'POST',
+    body: event.data,
+  });
+
+  isLoading.value = false;
 }
 </script>
 
@@ -43,6 +51,7 @@ async function onSubmit(event: FormSubmitEvent<PasswordLoginInput>) {
                  :fields="fields"
                  :providers="providers"
                  separator="ou"
+                 :loading="isLoading"
                  @submit="onSubmit"/>
     </UPageCard>
   </div>

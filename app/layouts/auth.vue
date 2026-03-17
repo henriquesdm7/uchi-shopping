@@ -10,7 +10,7 @@
       </NuxtLink>
     </template>
     <template #right>
-      <UColorModeButton/>
+      <UColorModeSelect/>
     </template>
   </UHeader>
   <UMain>
