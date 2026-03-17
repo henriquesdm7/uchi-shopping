@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import LogoutButton from "~/components/LogoutButton.vue";
 </script>
 
 <template>
@@ -11,6 +12,7 @@
     </template>
     <template #right>
       <UColorModeSelect/>
+      <LogoutButton />
     </template>
   </UHeader>
   <UMain>
