@@ -16,3 +16,12 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Market {
+  id        String   @id @default(uuid())
+  name      String
+  address   String?
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

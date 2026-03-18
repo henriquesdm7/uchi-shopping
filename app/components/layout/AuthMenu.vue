@@ -42,7 +42,8 @@ const items = ref<NavigationMenuItem[][]>([
         {
           label: 'Mercados',
           description: 'Mantenha um cadastro atualizado dos mercados onde costuma fazer compras para facilitar o registro.',
-          icon: 'i-lucide-store'
+          icon: 'i-lucide-store',
+          to: '/cadastros/mercados'
         },
       ]
     }
