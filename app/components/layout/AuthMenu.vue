@@ -14,6 +14,12 @@ const items = ref<NavigationMenuItem[][]>([
           to: '/compras/registro'
         },
         {
+          label: 'Histórico',
+          description: 'Visualize e gerencie seu histórico de compras.',
+          icon: 'i-lucide-history',
+          to: '/compras/historico'
+        },
+        {
           label: 'Mapa',
           description: 'Visualize suas compras em um mapa para identificar padrões de gastos por localização.',
           icon: 'i-lucide-map-pin'
