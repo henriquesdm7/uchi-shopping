@@ -2,23 +2,17 @@ import {PasswordLoginSchema} from "#shared/utils/auth.schema";
 import {compareSync} from "bcrypt-ts";
 
 export default defineEventHandler(async event => {
-  console.log("Erro de validação");
-
   const validated = await readValidatedBody(event, body => PasswordLoginSchema.safeParse(body));
-
-  console.log("Erro de validação");
 
   if (!validated.success) {
     returnError();
   }
 
-    console.log("Buscando user");
   const user = await prisma.user.findUnique({
     where: {
       email: validated.data.email,
     }
   });
-    console.log("Achou user: ", user);
 
   if (!user || !compareSync(validated.data.password, user.password)) {
     returnError();
