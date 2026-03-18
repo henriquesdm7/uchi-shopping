@@ -47,6 +47,12 @@ const items = ref<NavigationMenuItem[][]>([
           to: '/cadastros/categorias'
         },
         {
+          label: 'Produtos',
+          description: 'Visualize todos os produtos cadastrados e acompanhe a evolução de preços.',
+          icon: 'i-lucide-package',
+          to: '/cadastros/produtos'
+        },
+        {
           label: 'Mercados',
           description: 'Mantenha um cadastro atualizado dos mercados onde costuma fazer compras para facilitar o registro.',
           icon: 'i-lucide-store',
