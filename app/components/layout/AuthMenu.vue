@@ -14,11 +14,6 @@ const items = ref<NavigationMenuItem[][]>([
           to: '/compras/registro'
         },
         {
-          label: 'Categorias',
-          description: 'Organize suas compras em categorias personalizadas para facilitar a visualização e análise.',
-          icon: 'i-lucide-tag'
-        },
-        {
           label: 'Mapa',
           description: 'Visualize suas compras em um mapa para identificar padrões de gastos por localização.',
           icon: 'i-lucide-map-pin'
@@ -33,6 +28,22 @@ const items = ref<NavigationMenuItem[][]>([
           description: 'Defina orçamentos para diferentes categorias e acompanhe seu progresso para manter suas finanças sob controle.',
           icon: 'i-lucide-pie-chart'
         }
+      ]
+    },
+    {
+      label: 'Cadastros',
+      icon: 'i-lucide-database',
+      children: [
+        {
+          label: 'Categorias',
+          description: 'Organize suas compras em categorias personalizadas para facilitar a visualização e análise.',
+          icon: 'i-lucide-tag'
+        },
+        {
+          label: 'Mercados',
+          description: 'Mantenha um cadastro atualizado dos mercados onde costuma fazer compras para facilitar o registro.',
+          icon: 'i-lucide-store'
+        },
       ]
     }
   ],
