@@ -16,12 +16,7 @@ const state = reactive<Partial<RegisterShoppingInput>>({
 })
 
 // MOCK: Lista de supermercados para seleção (futuramente virá do banco de dados)
-const markets = [
-  {label: 'Supermercado A', value: '1'},
-  {label: 'Supermercado B', value: '2'},
-  {label: 'Mercadinho da Esquina', value: '3'},
-  {label: 'Atacadão', value: '4'},
-]
+const {data: markets} = await useFetch('/api/markets')
 
 function handleFileChange(event: Event) {
   const input = event.target as HTMLInputElement
@@ -45,12 +40,31 @@ function clearImage() {
   }
 }
 
+const isLoading = ref(false);
+const toast = useToast();
+
 async function handleSubmit() {
-  console.log('Enviando para processamento:', {
-    marketId: state.marketId,
-    date: state.date,
-    file: state.file
-  })
+  if (!state.file) return;
+
+  isLoading.value = true;
+  const formData = new FormData();
+  formData.append('marketId', state.marketId || '');
+  formData.append('date', state.date || '');
+  formData.append('file', state.file);
+
+  try {
+    const response = await $fetch('/api/purchases', {
+      method: 'POST',
+      body: formData,
+    });
+    console.log(response);
+    toast.add({title: 'Sucesso', description: 'Compra registrada para processamento!', color: 'success'})
+  } catch (e) {
+    console.error(e);
+    toast.add({title: 'Erro', description: 'Falha ao enviar o registro.', color: 'error'})
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 
@@ -133,10 +147,10 @@ async function handleSubmit() {
           <UFormField label="Supermercado / Estabelecimento" name="marketId" required>
             <USelectMenu
               v-model="state.marketId"
-              :items="markets"
+              :items="markets || []"
               placeholder="Selecione o estabelecimento"
-              label-key="label"
-              value-key="value"
+              label-key="name"
+              value-key="id"
               search-input
               icon="i-lucide-store"
               class="w-full"
