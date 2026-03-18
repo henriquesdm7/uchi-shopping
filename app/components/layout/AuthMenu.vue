@@ -43,7 +43,8 @@ const items = ref<NavigationMenuItem[][]>([
         {
           label: 'Categorias',
           description: 'Organize suas compras em categorias personalizadas para facilitar a visualização e análise.',
-          icon: 'i-lucide-tag'
+          icon: 'i-lucide-tag',
+          to: '/cadastros/categorias'
         },
         {
           label: 'Mercados',
