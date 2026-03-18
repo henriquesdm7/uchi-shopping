@@ -25,5 +25,9 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+
+  runtimeConfig: {
+    geminiApiKey: process.env.GEMINI_API_KEY,
   }
 })

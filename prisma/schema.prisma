@@ -22,6 +22,62 @@ model Market {
   address   String?
   latitude  Float?
   longitude Float?
+  purchases Purchase[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  icon      String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  purchaseItems PurchaseItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AiRequest {
+  id           String   @id @default(uuid())
+  feature      String
+  model        String
+  inputTokens  Int
+  outputTokens Int
+  totalTokens  Int
+  durationMs   Int?
+  status       String
+  createdAt    DateTime @default(now())
+}
+
+model Purchase {
+  id          String         @id @default(uuid())
+  marketId    String
+  market      Market         @relation(fields: [marketId], references: [id])
+  date        DateTime
+  total       Float
+  items       PurchaseItem[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model PurchaseItem {
+  id         String   @id @default(uuid())
+  purchaseId String
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Float
+  unitPrice  Float
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

@@ -27,7 +27,7 @@ import AuthMenu from "~/components/layout/AuthMenu.vue";
   </UMain>
   <UFooter>
     <div class="text-center text-sm text-gray-500">
-      &copy; {{ new Date().getFullYear() }} SuportIA. Todos os direitos reservados.
+      &copy; {{ new Date().getFullYear() }} Uchi Shopping. Todos os direitos reservados.
     </div>
   </UFooter>
 </template>

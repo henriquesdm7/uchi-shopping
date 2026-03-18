@@ -13,7 +13,7 @@ useHead({
   }
 })
 
-const title = 'SuportIA'
+const title = 'Uchi Shopping'
 const description = 'Um sistema de suporte técnico inteligente, alimentado por IA e que oferece velocidade e precisão.'
 
 useSeoMeta({
