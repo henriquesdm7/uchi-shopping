@@ -52,7 +52,11 @@ export async function processReceiptImage(imageBuffer: Buffer, mimeType: string,
     ${categoriesContext}
     ${productsContext}
 
-    Please clean up the product descriptions (remove codes like "001", "UN", etc. if they are just identifiers).
+    CRITICAL RULES FOR ITEMS:
+    1. Read the exact numerical quantity for each item (e.g., if it says "4un", the quantity is 4).
+    2. If the EXACT SAME product appears multiple times on different lines, you MUST combine them into a SINGLE item in your JSON response. SUM their individual quantities and SUM their total prices. (Example: "Item A 4un" + "Item A 3un" = "Item A" with quantity 7).
+    3. Clean up the product descriptions (remove codes like "001", "UN", etc. if they are just identifiers).
+
     Return ONLY the JSON object.
   `;
 
