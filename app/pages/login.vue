@@ -9,6 +9,7 @@ definePageMeta({
 
 const toast = useToast();
 const route = useRoute();
+const { fetch: fetchSession } = useUserSession();
 const isLoading = ref(false);
 
 const fields: AuthFormField[] = [{
@@ -39,10 +40,11 @@ async function onSubmit(event: FormSubmitEvent<PasswordLoginInput>) {
       method: 'POST',
       body: event.data,
     });
+    await fetchSession();
 
     toast.add({title: 'Login bem-sucedido', description: 'Você entrou na sua conta', color: 'success'});
     const redirectTo = (route.query.redirect as string) || '/';
-    navigateTo(redirectTo);
+    await navigateTo(redirectTo);
   } catch (e: unknown) {
     toast.add({title: 'Erro de login', description: 'Usuário ou senha inválidos', color: 'error'});
   } finally {
