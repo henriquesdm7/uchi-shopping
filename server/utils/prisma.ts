@@ -9,6 +9,7 @@ const prismaClientSingleton = () => {
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT as number | undefined,
     connectionLimit: 5,
+    allowPublicKeyRetrieval: true,
   });
   return new PrismaClient({
     adapter: adapter,
