@@ -8,7 +8,7 @@ const {user} = useUserSession();
 
 <template>
   <UContainer>
-    <h2 class="text-lg">Boas-vindas, {{ user!.name }}!</h2>
+    <h2 class="text-lg">Boas-vindas, {{ user?.name }}!</h2>
 
     <!-- TODO:  NuxtUI NavigationMenu Vertical  -->
   </UContainer>
