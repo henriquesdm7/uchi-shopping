@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type {Category} from '@prisma/client'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const {data: categories, refresh} = await useFetch<Category[]>('/api/categories')
+const {data: categories, refresh} = await useFetch<any[]>('/api/categories')
 const toast = useToast();
 
 async function handleDelete(id: string) {
@@ -24,7 +23,7 @@ async function handleDelete(id: string) {
   }
 }
 
-const getItems = (row: Category) => [
+const getItems = (row: any) => [
   {
     label: 'Editar',
     icon: 'i-lucide-pencil',

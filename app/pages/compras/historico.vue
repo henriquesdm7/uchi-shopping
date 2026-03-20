@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type {Purchase, Market} from '@prisma/client'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const {data: purchases, refresh} = await useFetch<(Purchase & { market: Market })[]>('/api/purchases')
+const {data: purchases, refresh} = await useFetch<any[]>('/api/purchases')
 
 function formatDate(dateString: string | Date) {
   return new Date(dateString).toLocaleDateString('pt-BR');

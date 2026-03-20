@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type {Market} from '@prisma/client'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const {data: markets, refresh} = await useFetch<Market[]>('/api/markets')
+const {data: markets, refresh} = await useFetch<any[]>('/api/markets')
 const toast = useToast();
 
 async function handleDelete(id: string) {
@@ -20,7 +19,7 @@ async function handleDelete(id: string) {
   }
 }
 
-const getItems = (row: Market) => [
+const getItems = (row: any) => [
   {
     label: 'Editar',
     icon: 'i-lucide-pencil',

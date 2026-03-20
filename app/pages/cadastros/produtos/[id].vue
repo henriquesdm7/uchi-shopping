@@ -29,7 +29,7 @@ const chartData = computed(() => {
   if (!stats.value?.history) return { labels: [], datasets: [] }
 
   const history = stats.value.history
-  const markets = [...new Set(history.map((h: any) => h.marketName))]
+  const markets = [...new Set<string>(history.map((h: any) => h.marketName as string))]
 
   const allDates = [...new Set(history.map((h: any) => formatDate(h.date)))].sort((a: any, b: any) => {
     const [d1, m1, y1] = a.split('/').map(Number)

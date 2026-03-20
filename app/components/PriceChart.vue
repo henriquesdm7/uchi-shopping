@@ -10,6 +10,8 @@ import {
   Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+import type { ChartData, ChartOptions } from 'chart.js'
+import type { PropType } from 'vue'
 
 ChartJS.register(
   CategoryScale,
@@ -23,11 +25,11 @@ ChartJS.register(
 
 const props = defineProps({
   data: {
-    type: Object,
+    type: Object as PropType<ChartData<'line'>>,
     required: true
   },
   options: {
-    type: Object,
+    type: Object as PropType<ChartOptions<'line'>>,
     default: () => ({
       responsive: true,
       maintainAspectRatio: false,

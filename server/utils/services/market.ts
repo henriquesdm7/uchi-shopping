@@ -1,4 +1,4 @@
-import {CreateMarketInput} from "#shared/utils/market.schema";
+import type {CreateMarketInput} from "#shared/utils/market.schema";
 import {prisma} from "#server/utils/prisma";
 
 export async function createMarket(input: CreateMarketInput) {

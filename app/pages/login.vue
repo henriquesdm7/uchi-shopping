@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {AuthFormField} from "@nuxt/ui/components/AuthForm.vue";
 import {type PasswordLoginInput, PasswordLoginSchema} from "#shared/utils/auth.schema";
-import {type FormSubmitEvent} from "@nuxt/ui/runtime/types";
 
 definePageMeta({
   layout: "guest",
@@ -32,7 +31,7 @@ const providers = [{
   }
 }]
 
-async function onSubmit(event: FormSubmitEvent<PasswordLoginInput>) {
+async function onSubmit(event: any) {
   isLoading.value = true;
 
   try {

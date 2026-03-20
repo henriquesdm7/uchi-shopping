@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type {Product, Category} from '@prisma/client'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const {data: products} = await useFetch<any[]>('/api/products')
+const {data: products, refresh} = await useFetch<any[]>('/api/products')
+const toast = useToast()
 
 const search = ref('')
 const filteredProducts = computed(() => {
@@ -17,11 +17,83 @@ function formatCurrency(value: number) {
   return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
 }
 
+const isUnifyModalOpen = ref(false)
+const selectedDuplicateProduct = ref<any>(null)
+const selectedBaseProduct = ref<any>(null)
+const isSubmitting = ref(false)
+
+const openUnifyModal = (product: any) => {
+  selectedDuplicateProduct.value = product
+  selectedBaseProduct.value = null
+  isUnifyModalOpen.value = true
+}
+
+const confirmUnification = async () => {
+  if (!selectedBaseProduct.value || !selectedDuplicateProduct.value) return
+  if (selectedBaseProduct.value.id === selectedDuplicateProduct.value.id) {
+    toast.add({ title: 'Erro', description: 'O produto principal não pode ser igual ao duplicado.', color: 'error' })
+    return
+  }
+
+  isSubmitting.value = true
+  try {
+    await $fetch('/api/products/unify', {
+      method: 'POST',
+      body: {
+        baseProductId: selectedBaseProduct.value.id,
+        duplicateProductId: selectedDuplicateProduct.value.id
+      }
+    })
+    toast.add({ title: 'Sucesso', description: 'Produtos unificados com sucesso!', color: 'success' })
+    isUnifyModalOpen.value = false
+    await refresh()
+  } catch (e: any) {
+    toast.add({ title: 'Erro', description: e.data?.message || 'Falha ao unificar produtos', color: 'error' })
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+async function handleDeleteProduct(product: any) {
+  if (!confirm(`Tem certeza que deseja excluir "${product.name}"?\nEsta ação não poderá ser desfeita.`)) return
+
+  try {
+    await $fetch(`/api/products/${product.id}`, { method: 'DELETE' })
+    toast.add({ title: 'Sucesso', description: 'Produto deletado com sucesso!', color: 'success' })
+    await refresh()
+  } catch (e: any) {
+    if (e.statusCode === 409) {
+      toast.add({ 
+        title: 'Ação Bloqueada', 
+        description: e.statusMessage || 'Produto possui vínculos. Utilize a opção de Unificação.', 
+        color: 'warning', 
+        icon: 'i-lucide-alert-triangle' 
+      })
+    } else {
+      toast.add({ title: 'Erro', description: 'Falha ao excluir o produto.', color: 'error' })
+    }
+  }
+}
+
 const getItems = (row: any) => [
   {
     label: 'Detalhes & Evolução',
     icon: 'i-lucide-line-chart',
     onSelect: () => navigateTo(`/cadastros/produtos/${row.id}`)
+  },
+  {
+    label: 'Unificar Produto...',
+    icon: 'i-lucide-merge',
+    onSelect: (e: any) => {
+      e?.preventDefault?.();
+      setTimeout(() => openUnifyModal(row), 50);
+    }
+  },
+  {
+    label: 'Excluir',
+    icon: 'i-lucide-trash-2',
+    color: 'error' as const,
+    onSelect: () => handleDeleteProduct(row)
   }
 ]
 </script>
@@ -83,6 +155,45 @@ const getItems = (row: any) => [
         </table>
       </div>
     </UCard>
+    
+    <UModal v-model:open="isUnifyModalOpen" title="Unificar Produtos" description="Escolha o produto base para a mesclagem.">
+      <template #body>
+        <div class="space-y-4">
+          <UAlert
+            title="Atenção"
+            icon="i-lucide-alert-triangle"
+            color="warning"
+          >
+            <template #description>
+              Todas as transações e listas vinculadas a <strong>{{ selectedDuplicateProduct?.name }}</strong> serão migradas para o produto principal selecionado abaixo e em seguida, o produto <strong>{{ selectedDuplicateProduct?.name }}</strong> será <strong>apagado irreversivelmente</strong> do banco de dados.
+            </template>
+          </UAlert>
+
+          <UFormField label="Produto Duplicado (Será Apagado)">
+            <UInput :model-value="selectedDuplicateProduct?.name" disabled class="opacity-75 relative z-0" />
+          </UFormField>
+
+          <UFormField label="Produto Principal (Base para onde migrar)">
+            <USelectMenu
+              v-model="selectedBaseProduct"
+              :items="products?.filter(p => p.id !== selectedDuplicateProduct?.id) || []"
+              label-key="name"
+              search-input
+              placeholder="Selecione o produto principal..."
+            />
+          </UFormField>
+        </div>
+      </template>
+
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton color="neutral" variant="ghost" @click="isUnifyModalOpen = false">Cancelar</UButton>
+          <UButton color="error" :loading="isSubmitting" :disabled="!selectedBaseProduct" @click="confirmUnification">
+            Confirmar Mesclagem Operacional
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </UContainer>
 </template>
 

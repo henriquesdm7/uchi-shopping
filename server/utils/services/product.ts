@@ -108,3 +108,41 @@ export async function getProductStats(id: string) {
   };
 }
 
+export async function unifyProducts(baseProductId: string, duplicateProductId: string) {
+  if (baseProductId === duplicateProductId) {
+    throw new Error('Base and duplicate product cannot be the same');
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    // 1. Migrate PurchaseItems
+    await tx.purchaseItem.updateMany({
+      where: { productId: duplicateProductId },
+      data: { productId: baseProductId }
+    });
+
+    // 2. Migrate ShoppingListItems
+    await tx.shoppingListItem.updateMany({
+      where: { productId: duplicateProductId },
+      data: { productId: baseProductId }
+    });
+
+    // 3. Delete duplicate product
+    await tx.product.delete({
+      where: { id: duplicateProductId }
+    });
+  });
+}
+
+export async function deleteProduct(id: string) {
+  const purchasesCount = await prisma.purchaseItem.count({ where: { productId: id } });
+  const listsCount = await prisma.shoppingListItem.count({ where: { productId: id } });
+
+  if (purchasesCount > 0 || listsCount > 0) {
+    throw new Error('PROD_IN_USE');
+  }
+
+  await prisma.product.delete({
+    where: { id }
+  });
+}
+
