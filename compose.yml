@@ -1,15 +1,16 @@
 services:
   db:
-    container_name: mysql-${DB_DATABASE:-shopping}
-    image: mysql:8.0
+    container_name: postgres-${DB_DATABASE:-shopping}
+    image: postgres:15
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-shopping}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE:-shopping}
+      POSTGRES_USER: ${DB_USERNAME:-pguser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pgpassword}
     ports:
-      - "${DB_PORT:-3307}:3306"
+      - "${DB_PORT:-5432}:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
 
 volumes:
-  db_data:
+  pg_data:

@@ -1,20 +1,11 @@
 import {PrismaClient} from "#server/generated/prisma/client";
-import {PrismaMariaDb} from "@prisma/adapter-mariadb";
+import {PrismaPg} from "@prisma/adapter-pg";
+import pg from "pg";
 
 const prismaClientSingleton = () => {
-  const adapter = new PrismaMariaDb({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT as number | undefined,
-    connectionLimit: 5,
-    allowPublicKeyRetrieval: true,
-  });
-  return new PrismaClient({
-    adapter: adapter,
-    // log: ['query', 'info', 'error', 'warn']
-  });
+  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  const adapter = new PrismaPg(pool as any)
+  return new PrismaClient({ adapter });
 }
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
