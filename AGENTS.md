@@ -1,44 +1,23 @@
-# AGENTS Guide for `uchi-shopping`
+# Master Guide para Agentes IA - `uchi-shopping`
 
-## Project Snapshot
-- Nuxt 4 full-stack app (Vue UI + Nitro server API) in a single package; no separate backend service.
-- Main domains currently implemented: authentication and user management (`/login`, `/usuarios/criar`).
-- UI language is Brazilian Portuguese (`app/app.vue`, `app/pages/login.vue`), so keep user-facing text in pt-BR.
-- The UI is mainly developed with NuxtUI components.
+Ao iniciar qualquer interação para desenvolvimento ou modificação deste projeto, **leia os documentos estruturais listados abaixo antes de tomar ou sugerir ações**. Compreender nossa arquitetura evita inconsistências na base de código.
 
-## Architecture You Should Assume
-- Frontend pages/components live in `app/**`; server endpoints live in `server/api/**`.
-- API handlers call Prisma directly or via server services (`server/utils/services/user.ts`).
-- Shared input validation schemas are in `shared/utils/*.schema.ts` and reused on both client and server.
-- Session auth is handled by `nuxt-auth-utils` (`setUserSession`, `useUserSession`, `clearUserSession`).
+## Documentação Essencial (Obrigatória a Leitura)
 
-## Request/Data Flow Patterns
-- Login flow: `app/pages/login.vue` -> `POST /api/login` (`server/api/login.post.ts`) -> session set -> redirect.
-- User creation flow: `app/pages/usuarios/criar.vue` -> `POST /api/users` (`server/api/users.post.ts`) -> `createUser` service -> Prisma.
-- Global route protection is server middleware (`server/middleware/redirect-guests.ts`), not page-level guards.
+O projeto `uchi-shopping` é dividido e regulado com base em dois pilares fundamentais de documentação:
 
-## Conventions Specific to This Repo
-- Validate request bodies with `readValidatedBody(...schema.safeParse...)` and return `createError` on invalid input.
-- Keep Zod schemas in `shared/utils` (`CreateUserSchema`, `PasswordLoginSchema`) and import via `#shared/...` aliases.
-- Passwords are hashed/checked with `bcrypt-ts` (`hashSync`, `compareSync`) before DB writes/auth.
-- DB uniqueness/business checks belong in service layer (`server/utils/services/user.ts` checks duplicate email).
-- Layout choice is explicit per page via `definePageMeta({ layout: 'auth' | 'guest' })`.
+1. **[Estrutura de Pastas e Arquivos (STRUCTURE.md)](./STRUCTURE.md)**
+   Descreve em detalhes a função de cada camada arquitetural na aplicação (App Nuxt, Server API, Shared, Prisma) e ilustra exatamente onde colocar novos componentes, schemas de validação e services lógicos.
 
-## Database + Prisma Notes
-- Prisma schema: `prisma/schema.prisma`; provider is MySQL.
-- Generated Prisma client is committed under `server/generated/prisma/**` (output configured in schema).
-- Prefer editing `prisma/schema.prisma`; do not edit the migrations, nor hand-edit generated client files; Instead, run `npx prisma generate` after schema changes to update the client.
-- Prisma client singleton is in `server/utils/prisma.ts` using `@prisma/adapter-mariadb` and env-based connection config.
+2. **[Regras de Desenvolvimento e Negócios (RULES.md)](./RULES.md)**
+   Estabelece os padrões determinantes sobre como o código deve ser escrito. Inclui mandamentos críticos de segurança (bcrypt validado em DB), roteamento (proteção via midleware Nitro), UI (pt-BR e framework NuxtUI), e ciclo de validação de dados (Zod em requisições server-side com `readValidatedBody`).
 
-## Dev Workflows (Verified from repo files)
-- Install deps: `npm install`
-- Start dev server: `npm dev`
-- Build/preview: `npm build` / `npm preview`
-- Static checks: `npm lint` and `npm typecheck`
-- Local DB container: `docker compose up -d` (MySQL 8.0, mapped to host `${DB_PORT:-3307}`)
+---
 
-## Environment/Integrations
-- Required env keys are documented in `.env.example`: `DB_*`, `DATABASE_URL`, `NUXT_SESSION_PASSWORD`.
-- `compose.yml` starts MySQL 8.0 and maps `${DB_PORT:-3307}` -> container `3306`.
-- Prisma config reads `DATABASE_URL` from env (`prisma.config.ts`).
+## Destaques Rápidos da Arquitetura
+- **Stack Principal**: Nuxt 4 (Vue 3 UI + Nitro Server API em pacote único).
+- **Interface e Língua**: UI desenvolvida com Vue 3, `@nuxt/ui` e TailwindCSS. O idioma predominante em páginas, mensagens e alertas deve ser obrigatoriamente **Português do Brasil (pt-BR)**.
+- **Banco de Dados**: MySQL gerido pelo ORM do Prisma (usando schemas definidos em `prisma/schema.prisma`).
+- **Data Flow**: Dados fluem da base do usuário (UI em `app/pages`) -> endpoints validados por Zod (`server/api/`) -> isolamento de regra de negócio nos serviços do Node (`server/utils/services/`) -> gravação segura no MySql via Prisma.
 
+> Ao implementar novos recursos (ex: telas, endpoints, modelos DB), crie as modificações pensando nestas quatro vertentes de integração.
