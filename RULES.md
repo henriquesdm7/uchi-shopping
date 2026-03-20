@@ -16,6 +16,7 @@ Este arquivo documenta os padrões de design, regras de negócios e convenções
 - **Layouts**: O layout de uma página deve ser explicitado através do meta da página: `definePageMeta({ layout: 'auth' | 'guest' })`.
 - Construir a UI privilegiando os componentes nativos do `@nuxt/ui`.
 - **Comunicação com API**: As chamadas ao backend devem consumir endpoints definidos em `server/api/`, preferencialmente usando hooks composables do Nuxt (`useFetch` ou `$fetch`).
+- **Navegação (AuthMenu)**: SEMPRE que criar uma nova funcionalidade base ou um novo módulo de UI (nova página de rota principal), é OBRIGATÓRIO adicionar o atalho/rota correspondente no componente `app/components/layout/AuthMenu.vue`. Isso garante que o usuário consiga navegar para a nova funcionalidade.
 
 ## 3. Padrões de Backend (Nitro / API)
 - **Lógica de Roteamento**: As regras de proteção global de rotas ficam limitadas ao middleware do servidor (`server/middleware/`), não devem ser feitas através de guards no lado do cliente nas pages.
@@ -35,7 +36,11 @@ Este arquivo documenta os padrões de design, regras de negócios e convenções
 - **Modificações de Schema**: Sempre atualize o `prisma/schema.prisma`. Após modificações neste arquivo, execute `npx prisma generate` para re-gerar a tipagem do client e `npx prisma migrate dev` para propagar as alterações para o banco de desenvolvimento.
 - Variáveis relativas ao banco devem respeitar as diretrizes de instalação do `.env.example` e do docker compose.
 
-## 6. Fluxos Contínuos
+## 6. Typecheck e Qualidade de Código (MANDATÓRIO)
+- **SEMPRE** cheque e corrija os problemas de type-check apontados pelo TypeScript ao criar ou modificar partes do código (seja log, validação em terminal ou problemas gerados apontados pela IDE). Não ignore erros de tipagem sob nenhuma circunstância.
+- Se o script `npm run typecheck` reportar falhas de TypeScript em seus arquivos gerados, revise e arrume seus models, `refs`, retornos de API e casts.
+
+## 7. Fluxos Contínuos
 - Scripts disponíveis descritos no `package.json`:
   - Instalação e atualização: `npm install`
   - Iniciar Dev: `npm run dev`

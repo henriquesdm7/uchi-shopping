@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String
+  password      String
+  shoppingLists ShoppingList[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Market {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
   address   String?
   latitude  Float?
   longitude Float?
   purchases Purchase[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Category {
@@ -37,13 +38,14 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  purchaseItems PurchaseItem[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String             @id @default(uuid())
+  name              String             @unique
+  categoryId        String?
+  category          Category?          @relation(fields: [categoryId], references: [id])
+  purchaseItems     PurchaseItem[]
+  shoppingListItems ShoppingListItem[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 model AiRequest {
@@ -59,14 +61,14 @@ model AiRequest {
 }
 
 model Purchase {
-  id          String         @id @default(uuid())
-  marketId    String
-  market      Market         @relation(fields: [marketId], references: [id])
-  date        DateTime
-  total       Float
-  items       PurchaseItem[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id        String         @id @default(uuid())
+  marketId  String
+  market    Market         @relation(fields: [marketId], references: [id])
+  date      DateTime
+  total     Float
+  items     PurchaseItem[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 }
 
 model PurchaseItem {
@@ -80,4 +82,27 @@ model PurchaseItem {
   totalPrice Float
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model ShoppingList {
+  id        String             @id @default(uuid())
+  name      String
+  userId    String?
+  user      User?              @relation(fields: [userId], references: [id])
+  items     ShoppingListItem[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+model ShoppingListItem {
+  id             String       @id @default(uuid())
+  shoppingListId String
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+  productId      String?
+  product        Product?     @relation(fields: [productId], references: [id])
+  name           String
+  quantity       Float?       @default(1)
+  checked        Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

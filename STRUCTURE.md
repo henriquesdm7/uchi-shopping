@@ -10,6 +10,7 @@ A aplicação utiliza as diretrizes de diretório do Nuxt 4, separando clarament
 Contém todo o código da interface do usuário (Frontend).
 - **`assets/`**: Arquivos estáticos não compilados, como folhas de estilo globais (`css/main.css`).
 - **`components/`**: Componentes Vue reutilizáveis (utilizando o `@nuxt/ui`).
+  - *Importante:* Ao criar novas páginas de funcionalidades e módulos (`pages/`), você deve OBRIGATORIAMENTE expô-las no menu de navegação que reside em `app/components/layout/AuthMenu.vue`.
 - **`layouts/`**: Layouts da aplicação (ex: layouts específicos para rotas autenticadas ou para visitantes).
 - **`pages/`**: Rotas da aplicação (ex: `login.vue`, `usuarios/`, `cadastros/`, `compras/`). Cada arquivo `.vue` aqui se torna uma URL na aplicação.
 - **`app.config.ts`**: Configurações da aplicação Vue (tema UI, etc).

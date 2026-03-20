@@ -59,6 +59,18 @@ const items = ref<NavigationMenuItem[][]>([
           to: '/cadastros/mercados'
         },
       ]
+    },
+    {
+      label: 'Listas',
+      icon: 'i-lucide-list-todo',
+      children: [
+        {
+          label: 'Minhas Listas',
+          description: 'Crie e gerencie suas listas de compras e controle os itens que precisa comprar.',
+          icon: 'i-lucide-clipboard-list',
+          to: '/listas'
+        }
+      ]
     }
   ],
   [

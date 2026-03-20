@@ -1,4 +1,4 @@
-import {UserCreateInput} from "#server/generated/prisma/models/User";
+import type {UserCreateInput} from "#server/generated/prisma/models/User";
 import {hashSync} from "bcrypt-ts";
 
 export async function createUser(input: UserCreateInput) {
