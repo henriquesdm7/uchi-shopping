@@ -12,22 +12,27 @@ Contém todo o código da interface do usuário (Frontend).
 - **`components/`**: Componentes Vue reutilizáveis (utilizando o `@nuxt/ui`).
   - *Importante:* Ao criar novas páginas de funcionalidades e módulos (`pages/`), você deve OBRIGATORIAMENTE expô-las no menu de navegação que reside em `app/components/layout/AuthMenu.vue`.
 - **`layouts/`**: Layouts da aplicação (ex: layouts específicos para rotas autenticadas ou para visitantes).
-- **`pages/`**: Rotas da aplicação (ex: `login.vue`, `usuarios/`, `cadastros/`, `compras/`). Cada arquivo `.vue` aqui se torna uma URL na aplicação.
+- **`pages/`**: Rotas da aplicação. Cada arquivo `.vue` aqui se torna uma URL na aplicação.
+  - O dashboard principal reside em `index.vue`.
+  - Rotas avulsas como `login.vue`.
+  - Módulos de domínio principais: `usuarios/`, `compras/`, `listas/` (Listas de Compras) e os subdiretórios de `cadastros/` (`categorias`, `mercados`, `produtos`).
 - **`app.config.ts`**: Configurações da aplicação Vue (tema UI, etc).
 - **`app.vue`**: Ponto de entrada do frontend Vue.
 
 ### 📁 `server/`
 Contém todo o código backend que roda no Nitro (servidor do Nuxt).
-- **`api/`**: Endpoints da API REST. Arquivos aqui são mapeados automaticamente para rotas `/api/*` (ex: `login.post.ts` -> `POST /api/login`).
+- **`api/`**: Endpoints da API REST. Arquivos aqui são mapeados automaticamente para rotas `/api/*`.
+  - Rotas avulsas de Autenticação: `login.post.ts`, `logout.post.ts`.
+  - Rotas de Domínio (CRUD REST-like e ações correlatas): `categories/`, `markets/`, `products/`, `purchases/`, `shopping-lists/`, `users/`.
 - **`middleware/`**: Middlewares executados do lado do servidor antes de as rotas da API ou requisições de página serem resolvidas (ex: proteção de rotas globais).
 - **`utils/`**: Utilitários do servidor e a camada de serviços.
-  - **`services/`**: Camada de lógica de negócios. Em vez de colocar lógica complexa diretamente nos handlers da API, ela é extraída para cá (ex: verificação de email duplicado, chamadas complexas ao banco).
+  - **`services/`**: Camada de lógica de negócios. A manipulação pesada de banco e lógicas complexas são abstraídas aqui (ex: `category.ts`, `product.ts`, `shoppingList.service.ts`). Destaca-se também o serviço de integração centralizado com IA (Google Gemini) em `gemini.ts`.
   - **`prisma.ts`**: Instância singleton do Prisma Client.
 - **`generated/`**: Código gerado automaticamente para o lado do servidor, geralmente abriga o Prisma Client customizado para este projeto.
 
 ### 📁 `shared/`
 Contém código compartilhado entre o frontend (`app/`) e o backend (`server/`).
-- **`utils/`**: Utilitários compartilhados, primariamente os schemas de validação Zod (ex: `auth.schema.ts`, `user.schema.ts`).
+- **`utils/`**: Utilitários compartilhados, primariamente os schemas de validação Zod que regulam os inputs das APIs e formulários da ponta. Principais: `auth.schema.ts`, `category.schema.ts`, `market.schema.ts`, `shopping.schema.ts`, `shoppingList.schema.ts`, `user.schema.ts`.
 - **`types/`**: Tipagens TypeScript comuns a ambos os lados.
 
 ### 📁 `prisma/`

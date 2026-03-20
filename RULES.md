@@ -10,6 +10,7 @@ Este arquivo documenta os padrões de design, regras de negócios e convenções
 - **Validação**: Zod (utilizado tanto no cliente quanto no servidor)
 - **Autenticação**: `nuxt-auth-utils` (sessão no servidor criptografada)
 - **Criptografia**: `bcrypt-ts` (para senhas)
+- **Integração IA**: `@google/generative-ai` (Google Gemini) para processamento de rotinas automatizadas
 
 ## 2. Padrões de Frontend (Vue / Nuxt)
 - O idioma da interface com o usuário (UI) da aplicação é **Português do Brasil (pt-BR)**. Todas as strings visíveis para o usuário devem estar neste idioma.
@@ -46,3 +47,7 @@ Este arquivo documenta os padrões de design, regras de negócios e convenções
   - Iniciar Dev: `npm run dev`
   - Build para Produção: `npm run build` e `npm run preview`
   - Serviços de background (MySQL locale): `docker compose up -d`
+
+## 8. Regras de Negócio e Funcionalidades Específicas
+- **Processamento de Notas Fiscais via IA**: A aplicação possui a capacidade de processar imagens de recibos e notas fiscais com IA (Google Gemini: `gemini-2.5-flash`). Toda a integração de IA **deve ser feita obrigatoriamente** invocando os métodos do serviço central localizados em `server/utils/services/gemini.ts`. Este serviço extrai dados consistentes do recibo, devolvendo JSON com `marketName`, `date`, `total`, agregando dinamicamente `items`.
+- **Unificação de Produtos**: Eventualmente podem haver registros de produtos duplicados devido a erros de inserção via IA ou pelo usuário final. Ao realizar a unificação explícita de produtos repetidos para um produto base (através da página ou rota administrativa correspondente), é exigido restritamente que todo o histórico — incluindo ligações com `PurchaseItem` e `ShoppingListItem` — seja transferido proativamente para o ID do produto "base" antes que o(s) ID(s) do(s) produto(s) obsoleto(s) seja(m) deletado(s). Nenhuma compra ou lista relacionada deve ser perdida nesse processo.
