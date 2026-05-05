@@ -80,7 +80,7 @@ async function handleSubmit() {
         </p>
       </template>
 
-      <UForm :schema="RegisterShoppingSchema" class="space-y-6" :state="state" @submit="handleSubmit">
+      <UForm :schema="RegisterShoppingSchema" class="space-y-6" :state="state" @submit="handleSubmit" :disabled="isLoading">
         <!-- Área de Upload -->
         <UFormField label="Foto da NF-e" name="file" required>
           <div
@@ -168,6 +168,7 @@ async function handleSubmit() {
             color="primary"
             icon="i-lucide-sparkles"
             type="submit"
+            :disabled="isLoading"
           >
             Processar com IA
           </UButton>
