@@ -15,7 +15,6 @@ const state = reactive<Partial<RegisterShoppingInput>>({
   file: undefined,
 })
 
-// MOCK: Lista de supermercados para seleção (futuramente virá do banco de dados)
 const {data: markets} = await useFetch('/api/markets')
 
 function handleFileChange(event: Event) {
@@ -128,6 +127,7 @@ async function handleSubmit() {
               ref="fileInputRef"
               type="file"
               accept="image/*"
+              capture="environment"
               class="hidden"
               @change="handleFileChange"
             />
